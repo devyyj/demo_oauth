@@ -1,5 +1,7 @@
 package com.example.demo_oauth.security;
 
+import com.example.demo_oauth.security.handler.MyOAuth2LoginFailureHandler;
+import com.example.demo_oauth.security.handler.MyOAuth2LoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +20,7 @@ public class Config {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(withDefaults());
+                .oauth2Login(c -> c.successHandler(new MyOAuth2LoginSuccessHandler()).failureHandler(new MyOAuth2LoginFailureHandler()));
         return http.build();
     }
 }
