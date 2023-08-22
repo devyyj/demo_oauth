@@ -15,7 +15,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @RequiredArgsConstructor
 public class Config {
-    private final MyUserRepository userRepository;
+//    private final MyUserRepository userRepository;
+    private final MyOAuth2LoginSuccessHandler successHandler;
+    private final MyOAuth2LoginFailureHandler failureHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -25,7 +27,8 @@ public class Config {
                 )
 //                .formLogin(withDefaults())
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(c -> c.successHandler(new MyOAuth2LoginSuccessHandler(userRepository)).failureHandler(new MyOAuth2LoginFailureHandler()));
+                .oauth2Login(c -> c.successHandler(successHandler)
+                        .failureHandler(failureHandler));
         return http.build();
     }
 }
