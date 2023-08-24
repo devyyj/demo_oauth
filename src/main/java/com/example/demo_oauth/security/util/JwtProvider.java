@@ -3,13 +3,15 @@ package com.example.demo_oauth.security.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-public class JwtTokenProvider {
-    private static final String SECRET_KEY = "your-secret-key"; // 실제로는 보안에 강한 랜덤한 키를 사용해야 합니다.
+@Component
+public class JwtProvider {
+    private final String SECRET_KEY = "your-secret-key"; // 실제로는 보안에 강한 랜덤한 키를 사용해야 합니다.
 
-    public static String generateToken(String subject) {
+    public String generateToken(String subject) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3600000); // 1시간 유효한 토큰
 
@@ -20,7 +22,7 @@ public class JwtTokenProvider {
                 .sign(Algorithm.HMAC256(SECRET_KEY));
     }
 
-    public static String verifyToken(String token) {
+    public String verifyToken(String token) {
         try {
             DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET_KEY))
                     .build()
