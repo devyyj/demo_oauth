@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/")
 public class MainController {
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('SARAM')")
     public String root(Authentication authentication){
         return "root!";
     }
 
     @GetMapping("/api/test")
+    @PreAuthorize("hasAnyAuthority('SARAM')")
     public String api(Authentication authentication){
         return "/api/test!";
     }

@@ -37,10 +37,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         log.info("username : " + username);
 
-        if (!username.isEmpty()) {
+        if (username != null) {
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(username, "", List.of(new SimpleGrantedAuthority("SARAM")));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } else {
+            Cookie prevUrlCookie = new Cookie("prevUrl", request.getRequestURI());
+            prevUrlCookie.setPath("/");
+            response.addCookie(prevUrlCookie);
         }
 
         filterChain.doFilter(request, response);

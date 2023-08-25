@@ -38,8 +38,8 @@ public class MyOAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
         response.addCookie(jwtCookie);
 
         // 로그인 성공 후 리다이렉트 또는 추가 작업을 수행할 수 있습니다.
-        clearAuthenticationAttributes(request);
-        super.setDefaultTargetUrl("/");
+//        clearAuthenticationAttributes(request);
+//        super.setDefaultTargetUrl("/");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
