@@ -15,8 +15,10 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(nullable = false)
     private String nickName;
-    @Column
+    @Column(nullable = false)
     private String socialId;
+    @Column(nullable = false)
+    private String socialType;
 }

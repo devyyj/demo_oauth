@@ -20,11 +20,16 @@ public class MyDefaultOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        String username = oAuth2User.getAttribute("sub");
+        String username = oAuth2User.getName();
 
         // 회원 아니면 회원 가입
-        if(userRepository.findBySocialId(username).isEmpty()) {
-            userRepository.save(MyUser.builder().nickName(username).socialId(username).build());
+        if (userRepository.findBySocialId(username).isEmpty()) {
+            // todo 랜덤 닉네임 기능
+            userRepository.save(MyUser.builder()
+                    .nickName(username)
+                    .socialId(username)
+                    .socialType(userRequest.getClientRegistration().getRegistrationId())
+                    .build());
         }
 
         return oAuth2User;

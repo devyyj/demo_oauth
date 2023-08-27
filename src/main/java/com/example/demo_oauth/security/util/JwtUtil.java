@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtProvider {
+public class JwtUtil {
     private final String SECRET_KEY = "your-secret-key"; // 실제로는 보안에 강한 랜덤한 키를 사용해야 합니다.
 
     public String generateToken(String subject) {

@@ -1,6 +1,7 @@
 package com.example.demo_oauth.security.handler;
 
-import com.example.demo_oauth.security.util.JwtProvider;
+import com.example.demo_oauth.security.util.CookieUtil;
+import com.example.demo_oauth.security.util.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class MyOAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -26,20 +28,19 @@ public class MyOAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String username = oauth2User.getName();
 
         // JWT 토큰 생성
-        String jwt = jwtProvider.generateToken(username);
+        String jwt = jwtUtil.generateToken(username);
 
         // JWT 토큰을 클라이언트에게 반환 (예: 응답 헤더에 추가)
         response.addHeader("Authorization", "Bearer " + jwt);
 
-        Cookie jwtCookie = new Cookie("jwt", jwt);
-        jwtCookie.setPath("/");
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setMaxAge(3600); // 토큰 만료 시간 (초)
+        // todo 프론트 개발 되면 해당 코드 제거, JWT는 헤더로 전송함
+        Cookie jwtCookie = cookieUtil.createCookie("jwt", jwt);
         response.addCookie(jwtCookie);
 
         // 로그인 성공 후 리다이렉트 또는 추가 작업을 수행할 수 있습니다.
-//        clearAuthenticationAttributes(request);
-//        super.setDefaultTargetUrl("/");
+        clearAuthenticationAttributes(request);
+        String prevUrl = cookieUtil.getCookie(request.getCookies(), "prevUrl");
+        super.setDefaultTargetUrl(prevUrl == null ? "/" : prevUrl);
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
